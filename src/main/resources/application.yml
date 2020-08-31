@@ -1,0 +1,14 @@
+kie:
+  source:
+      project : default
+      app : appA
+      service : serviceA
+      version : 1.0.0
+      rule :
+        - resource : abc
+          controlBehavior : 0
+          count : 20
+          grade : 1
+          limitApp : default
+          strategy : 0
+      url : 192.168.0.1:8080
