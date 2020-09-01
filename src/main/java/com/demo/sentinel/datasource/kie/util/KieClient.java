@@ -27,12 +27,13 @@ public class KieClient {
             if (statusCode != HttpStatus.SC_OK){
                 RecordLog.warn(String.format("Get config from ServiceComb-kie failed, status code is %d",
                         statusCode));
+                return Optional.empty();
             }
 
             HttpEntity entity = response.getEntity();
             String result = EntityUtils.toString(entity, "utf-8");
             kieResponse = JSON.parseObject(result, KieConfigResponse.class);
-        }catch (IOException e){
+        } catch (IOException e){
             RecordLog.error("Get config from ServiceComb-kie failed.", e);
             return Optional.empty();
         }

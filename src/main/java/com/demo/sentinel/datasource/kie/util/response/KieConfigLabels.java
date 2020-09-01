@@ -4,7 +4,7 @@ import com.alibaba.fastjson.annotation.JSONField;
 import lombok.Getter;
 
 @Getter
-public class ConfigLabels {
+public class KieConfigLabels {
     @JSONField(name = "app")
     private String app;
 
