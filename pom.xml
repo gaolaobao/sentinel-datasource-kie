@@ -8,7 +8,7 @@
         <version>2.3.3.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.demo</groupId>
+    <groupId>com.alibaba.csp.sentinel</groupId>
     <artifactId>sentinel-extensions</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>sentinel-extensions</name>

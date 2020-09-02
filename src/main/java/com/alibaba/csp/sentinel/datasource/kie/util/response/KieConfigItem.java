@@ -1,4 +1,4 @@
-package com.demo.sentinel.datasource.kie.util.response;
+package com.alibaba.csp.sentinel.datasource.kie.util.response;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import lombok.Getter;

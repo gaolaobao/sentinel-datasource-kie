@@ -1,8 +1,8 @@
-package com.demo.sentinel.datasource.kie.util;
+package com.alibaba.csp.sentinel.datasource.kie.util;
 
+import com.alibaba.csp.sentinel.datasource.kie.util.response.KieConfigResponse;
 import com.alibaba.csp.sentinel.log.RecordLog;
 import com.alibaba.fastjson.JSON;
-import com.demo.sentinel.datasource.kie.util.response.KieConfigResponse;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.CloseableHttpResponse;

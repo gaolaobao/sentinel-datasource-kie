@@ -1,13 +1,14 @@
-package com.demo.sentinel.datasource.kie;
+package com.alibaba.csp.sentinel.datasource.kie;
 
 import com.alibaba.csp.sentinel.datasource.AutoRefreshDataSource;
 import com.alibaba.csp.sentinel.datasource.Converter;
+import com.alibaba.csp.sentinel.datasource.kie.common.ServiceInfo;
+import com.alibaba.csp.sentinel.datasource.kie.util.KieClient;
+import com.alibaba.csp.sentinel.datasource.kie.util.response.KieConfigItem;
+import com.alibaba.csp.sentinel.datasource.kie.util.response.KieConfigLabels;
+import com.alibaba.csp.sentinel.datasource.kie.util.response.KieConfigResponse;
 import com.alibaba.fastjson.JSON;
-import com.demo.sentinel.datasource.kie.common.ServiceInfo;
-import com.demo.sentinel.datasource.kie.util.KieClient;
-import com.demo.sentinel.datasource.kie.util.response.KieConfigItem;
-import com.demo.sentinel.datasource.kie.util.response.KieConfigLabels;
-import com.demo.sentinel.datasource.kie.util.response.KieConfigResponse;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,20 +24,26 @@ public class KieDataSource<T> extends AutoRefreshDataSource<String, T> {
 
     private String lastRules;
 
-    public KieDataSource(Converter<String, T> configParser, ServiceInfo serviceInfo, String ruleKey) {
-        this(configParser, DEFAULT_REFRESH_MS, serviceInfo, ruleKey);
+    public KieDataSource(Converter<String, T> configParser, ServiceInfo serviceInfo, String ruleName,
+                         String defaultRule) {
+        this(configParser, DEFAULT_REFRESH_MS, serviceInfo, ruleName, defaultRule);
     }
 
     public KieDataSource(Converter<String, T> configParser, long recommendRefreshMs,
-                         ServiceInfo serviceInfo, String ruleKey) {
+                         ServiceInfo serviceInfo, String ruleKey, String defaultRule) {
         super(configParser, recommendRefreshMs);
 
         this.serviceInfo = serviceInfo;
         this.ruleKey = ruleKey;
+        this.lastRules = defaultRule;
     }
 
     @Override
     public String readSource() {
+        if (serviceInfo == null || StringUtils.isEmpty(serviceInfo.getUrl())){
+            return lastRules;
+        }
+
         Optional<KieConfigResponse> config = KieClient.getConfig(serviceInfo.getUrl());
 
         // Get target items value.
@@ -60,7 +67,7 @@ public class KieDataSource<T> extends AutoRefreshDataSource<String, T> {
      * @param item config item
      * @return judge result
      */
-    public boolean isTargetItem(KieConfigItem item){
+    private boolean isTargetItem(KieConfigItem item){
         KieConfigLabels labels = item.getLabels();
         String key = item.getKey();
 

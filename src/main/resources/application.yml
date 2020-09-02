@@ -1,4 +1,4 @@
-Sentinel:
+sentinel:
   source:
       type : Kie
       address : 192.168.0.1:8080
@@ -6,22 +6,3 @@ Sentinel:
       app : appA
       service : serviceA
       version : 1.0.0
-      resources :
-          -
-              name: abc
-              flowRule :
-                  controlBehavior : 0
-                  count : 20
-                  grade : 1
-                  limitApp : default
-                  strategy : 0
-              degradeRule:
-                  count : 20
-                  grade : 0
-                  passCount : 0
-                  timeWindow : 10
-      systemRule :
-          avRt: 10
-          highestSystemLoad : 5
-          maxThread: 10
-          qps: 20

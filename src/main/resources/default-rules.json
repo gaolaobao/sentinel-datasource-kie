@@ -1,0 +1,37 @@
+{
+  "FlowRule" : [
+    {
+      "resource": "abc",
+      "controlBehavior": 0,
+      "count": 20.0,
+      "grade": 1,
+      "limitApp": "default",
+      "strategy": 0
+    },
+    {
+      "resource": "abc1",
+      "controlBehavior": 0,
+      "count": 20.0,
+      "grade": 1,
+      "limitApp": "default",
+      "strategy": 0
+    }
+  ],
+  "DegradeRule" : [
+    {
+      "resource": "abc",
+      "count": 20.0,
+      "grade": 0,
+      "passCount": 0,
+      "timeWindow": 10
+    }
+  ],
+  "SystemRule" : [
+    {
+      "avgRt": 10,
+      "highestSystemLoad": 5.0,
+      "maxThread": 10,
+      "qps": 20.0
+    }
+  ]
+}
