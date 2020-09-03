@@ -64,7 +64,6 @@ class KieDataSourceTest {
             }
         }
 
-
         JSONObject jsonObject = JSON.parseObject(stringBuilder.toString());
         return jsonObject.get(ruleKey).toString();
     }
