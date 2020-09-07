@@ -10,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
@@ -33,7 +32,7 @@ public class KieDataSourceWrapper extends DataSourceWrapper {
     @Autowired
     ServiceInfo serviceInfo;
 
-    @PostConstruct
+    @Override
     public void init(){
         registerDataSourceCenter();
 

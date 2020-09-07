@@ -6,4 +6,6 @@ public abstract class DataSourceWrapper {
     public void registerDataSourceCenter(){
         DataSourceCenter.register(dataSourceType, this);
     }
+
+    public abstract void init();
 }
