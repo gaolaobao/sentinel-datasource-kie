@@ -1,6 +1,6 @@
 sentinel:
   source:
-      type : Kie
+      type : KieDataSource
       address : 192.168.0.1:8080
       project : default
       app : appA

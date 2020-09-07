@@ -1,5 +1,7 @@
 package com.alibaba.csp.sentinel.datasource.rule;
 
+import com.alibaba.csp.sentinel.datasource.AbstractDataSource;
+
 public abstract class RuleWrapper {
     protected String ruleType;
 
@@ -7,5 +9,5 @@ public abstract class RuleWrapper {
         RuleCenter.register(ruleType, this);
     }
 
-    protected abstract void registerRuleManager(String ruleValue);
+    protected abstract void registerRuleManager(AbstractDataSource<String, ?> dataSource);
 }
