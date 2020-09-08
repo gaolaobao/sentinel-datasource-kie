@@ -3,27 +3,19 @@ package com.alibaba.csp.sentinel.datasource.rule;
 import com.alibaba.csp.sentinel.datasource.AbstractDataSource;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.util.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.Map;
 
 @Slf4j
+@Service
 public class RuleCenter {
     @Getter
-    private static final ConcurrentHashMap<String, RuleWrapper> ruleMap =
-            new ConcurrentHashMap<>();
+    @Autowired
+    private Map<String, RuleWrapper> ruleMap;
 
-    public static void register(String ruleName, RuleWrapper ruleWrapper){
-        if (StringUtils.isEmpty(ruleName)){
-            log.warn("Rule name is null.");
-            return;
-        }
-
-        log.info(String.format("Register %s to rule center.", ruleName));
-        ruleMap.put(ruleName, ruleWrapper);
-    }
-
-    public static void registerRuleManager(String ruleType, AbstractDataSource<String, ?> dataSource){
+    public void registerRuleManager(String ruleType, AbstractDataSource<String, ?> dataSource){
         if(!ruleMap.containsKey(ruleType)){
             log.error(String.format("Un support rule type %s.", ruleType));
             return;

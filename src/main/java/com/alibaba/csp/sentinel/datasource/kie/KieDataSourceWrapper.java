@@ -3,6 +3,7 @@ package com.alibaba.csp.sentinel.datasource.kie;
 import com.alibaba.csp.sentinel.datasource.Converter;
 import com.alibaba.csp.sentinel.datasource.DataSourceWrapper;
 import com.alibaba.csp.sentinel.datasource.kie.common.ServiceInfo;
+import com.alibaba.csp.sentinel.datasource.rule.RuleCenter;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
@@ -12,8 +13,6 @@ import org.springframework.stereotype.Component;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
@@ -21,8 +20,8 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
-@Component
-public class KieDataSourceWrapper extends DataSourceWrapper {
+@Component("KieDataSource")
+public class KieDataSourceWrapper implements DataSourceWrapper {
     private static final String DEFAULT_RULE_FILE = "default-rules.json";
 
     private final Map<String, String> rulesMap = new ConcurrentHashMap<>();
@@ -30,15 +29,18 @@ public class KieDataSourceWrapper extends DataSourceWrapper {
     private final Map<String, KieDataSource<?>> sourceMap = new ConcurrentHashMap<>();
 
     @Autowired
+    private RuleCenter ruleCenter;
+
+    @Autowired
     ServiceInfo serviceInfo;
 
     @Override
     public void init(){
-        registerDataSourceCenter();
-
         initDefaultRules();
 
         initDataSources();
+
+        registerRuleManager();
     }
 
     private void initDefaultRules(){
@@ -68,41 +70,41 @@ public class KieDataSourceWrapper extends DataSourceWrapper {
 
     private void initDataSources(){
         for(Map.Entry<String, String> entry : rulesMap.entrySet()){
-            Optional<KieDataSource<?>> kieDataSource = getKieDataSource(entry.getKey(), entry.getValue());
+            String ruleClassPath = entry.getKey();
 
-            kieDataSource.ifPresent(source -> sourceMap.put(entry.getKey(), source));
+            int ruleKeyIndex = ruleClassPath.lastIndexOf(".");
+            String ruleKey = ruleClassPath.substring(ruleKeyIndex + 1);
+
+            Optional<KieDataSource<?>> kieDataSource = getKieDataSource(ruleClassPath, ruleKey, entry.getValue());
+
+            kieDataSource.ifPresent(source -> sourceMap.put(ruleKey, source));
         }
     }
 
-    private Optional<KieDataSource<?>> getKieDataSource(String ruleKey, String ruleValue){
+    private Optional<KieDataSource<?>> getKieDataSource(String rulePath, String ruleKey, String ruleValue){
         Class<?> ruleClass;
 
         try {
-            ruleClass = Class.forName(ruleKey);
+            ruleClass = Class.forName(rulePath);
         }catch (ClassNotFoundException e){
             log.error(String.format("No found rule: %s", ruleKey), e);
             return Optional.empty();
         }
 
-        return getKieDataSource(ruleKey, ruleValue, ruleClass);
+        return Optional.of(getKieDataSource(ruleKey, ruleValue, ruleClass));
     }
 
-    private <T> Optional<KieDataSource<?>> getKieDataSource(String ruleKey, String ruleValue, Class<T> ruleClass){
-        KieDataSource<?> dataSource;
+    private <T> KieDataSource<List<T>> getKieDataSource(String ruleKey, String ruleValue, Class<T> ruleClass){
         Converter<String, List<T>> parser = source -> JSON.parseObject(source,
                 new TypeReference<List<T>>() {});
 
-        try {
-            Constructor<?> constructor = ruleClass.getDeclaredConstructor(Converter.class, ServiceInfo.class,
-                    String.class, String.class);
-            dataSource = (KieDataSource<List<T>>) constructor.newInstance(parser, serviceInfo, ruleKey, ruleValue);
-        }catch (InstantiationException | IllegalAccessException | InvocationTargetException
-                | NoSuchMethodException e) {
-            log.error(String.format("Get data source failed, rule: %s.", ruleKey), e);
-            return Optional.empty();
-        }
+        return new KieDataSource<List<T>>(parser, serviceInfo, ruleKey, ruleValue);
+    }
 
-        return Optional.of(dataSource);
+    private void registerRuleManager(){
+        for(Map.Entry<String, KieDataSource<?>> entry : sourceMap.entrySet()){
+            ruleCenter.registerRuleManager(entry.getKey(), entry.getValue());
+        }
     }
 }
 

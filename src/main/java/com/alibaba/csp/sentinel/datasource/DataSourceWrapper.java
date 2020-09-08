@@ -1,11 +1,5 @@
 package com.alibaba.csp.sentinel.datasource;
 
-public abstract class DataSourceWrapper {
-    protected String dataSourceType;
-
-    public void registerDataSourceCenter(){
-        DataSourceCenter.register(dataSourceType, this);
-    }
-
-    public abstract void init();
+public interface DataSourceWrapper {
+    void init();
 }
