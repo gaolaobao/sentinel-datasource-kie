@@ -3,7 +3,7 @@
     {
       "resource": "abc",
       "controlBehavior": 0,
-      "count": 20.0,
+      "count": 10.0,
       "grade": 1,
       "limitApp": "default",
       "strategy": 0
@@ -11,7 +11,7 @@
     {
       "resource": "abc1",
       "controlBehavior": 0,
-      "count": 20.0,
+      "count": 10.0,
       "grade": 1,
       "limitApp": "default",
       "strategy": 0

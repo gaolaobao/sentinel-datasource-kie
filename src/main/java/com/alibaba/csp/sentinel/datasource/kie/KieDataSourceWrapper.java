@@ -96,7 +96,7 @@ public class KieDataSourceWrapper implements DataSourceWrapper {
 
     private <T> KieDataSource<List<T>> getKieDataSource(String ruleKey, String ruleValue, Class<T> ruleClass){
         Converter<String, List<T>> parser = source -> JSON.parseObject(source,
-                new TypeReference<List<T>>() {});
+                new TypeReference<List<T>>(ruleClass) {});
 
         return new KieDataSource<List<T>>(parser, serviceInfo, ruleKey, ruleValue);
     }

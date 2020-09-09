@@ -1,11 +1,11 @@
 package com.alibaba.csp.sentinel.datasource.kie.util.response;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import lombok.Getter;
+import lombok.Data;
 
 import java.util.List;
 
-@Getter
+@Data
 public class KieConfigResponse {
     @JSONField(name = "total")
     private int total;

@@ -19,8 +19,9 @@ public class DataSourceCenter {
 
     @PostConstruct
     public void init(){
-        DataSourceWrapper sourceWrapper = dataSourcesMap.get(dataSourceType);
+        log.info("Begin init data sources.");
 
+        DataSourceWrapper sourceWrapper = dataSourcesMap.get(dataSourceType);
         sourceWrapper.init();
     }
 }

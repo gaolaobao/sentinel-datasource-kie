@@ -1,9 +1,9 @@
 package com.alibaba.csp.sentinel.datasource.kie.util.response;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import lombok.Getter;
+import lombok.Data;
 
-@Getter
+@Data
 public class KieConfigItem {
     @JSONField(name = "id")
     private String id;

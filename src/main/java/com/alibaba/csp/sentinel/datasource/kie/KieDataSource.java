@@ -7,14 +7,12 @@ import com.alibaba.csp.sentinel.datasource.kie.util.KieClient;
 import com.alibaba.csp.sentinel.datasource.kie.util.response.KieConfigItem;
 import com.alibaba.csp.sentinel.datasource.kie.util.response.KieConfigLabels;
 import com.alibaba.csp.sentinel.datasource.kie.util.response.KieConfigResponse;
-import com.alibaba.fastjson.JSON;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
-
+@Slf4j
 public class KieDataSource<T> extends AutoRefreshDataSource<String, T> {
     public static final long DEFAULT_REFRESH_MS = 3000;
 
@@ -36,27 +34,38 @@ public class KieDataSource<T> extends AutoRefreshDataSource<String, T> {
         this.serviceInfo = serviceInfo;
         this.ruleKey = ruleKey;
         this.lastRules = defaultRule;
+
+        firstLoad();
+    }
+
+    private void firstLoad() {
+        log.info("First load config.");
+
+        try {
+            getProperty().updateValue(loadConfig(this.lastRules));
+        } catch (Throwable e) {
+            log.error("First loadConfig exception", e);
+        }
     }
 
     @Override
     public String readSource() {
+        log.info("Start read source.");
+
         if (serviceInfo == null || StringUtils.isEmpty(serviceInfo.getUrl())){
             return lastRules;
         }
 
         Optional<KieConfigResponse> config = KieClient.getConfig(serviceInfo.getUrl());
 
-        // Get target items value.
-        List<String> newRules = config.map(
-                response -> response.getData().stream()
-                        .filter(this::isTargetItem)
-                        .map(KieConfigItem::getValue)
-                        .collect(Collectors.toList()))
-                .orElse(null);
+        config.ifPresent(x -> {
+            Optional<String> newRule = x.getData().stream()
+                    .filter(this::isTargetItem)
+                    .map(KieConfigItem::getValue)
+                    .findFirst();
 
-
-        // If null, return last rule.
-        lastRules = (newRules == null) ? lastRules : JSON.toJSONString(newRules);
+            newRule.ifPresent(rule -> lastRules = rule);
+        });
 
         return lastRules;
     }
@@ -71,9 +80,10 @@ public class KieDataSource<T> extends AutoRefreshDataSource<String, T> {
         KieConfigLabels labels = item.getLabels();
         String key = item.getKey();
 
-        return key.equals(this.ruleKey)
-                && labels.getApp().equals(serviceInfo.getApp())
-                && labels.getService().equals(serviceInfo.getService())
-                && labels.getVersion().equals(serviceInfo.getVersion());
+        return this.ruleKey.equals(key)
+                && serviceInfo.getApp().equals(labels.getApp())
+                && serviceInfo.getService().equals(labels.getService())
+                && serviceInfo.getVersion().equals(labels.getVersion())
+                && serviceInfo.getEnvironment().equals(labels.getEnvironment());
     }
 }

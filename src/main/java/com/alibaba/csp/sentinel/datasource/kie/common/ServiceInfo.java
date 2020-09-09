@@ -22,6 +22,8 @@ public class ServiceInfo {
 
     private String project;
 
+    private String environment;
+
     public String getUrl(){
         return "http://" + address + "/v1/" + project + "/kie/kv";
     }

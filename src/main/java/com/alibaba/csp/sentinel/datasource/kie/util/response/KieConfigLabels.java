@@ -1,9 +1,9 @@
 package com.alibaba.csp.sentinel.datasource.kie.util.response;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import lombok.Getter;
+import lombok.Data;
 
-@Getter
+@Data
 public class KieConfigLabels {
     @JSONField(name = "app")
     private String app;
@@ -13,4 +13,7 @@ public class KieConfigLabels {
 
     @JSONField(name = "version")
     private String version;
+
+    @JSONField(name = "environment")
+    private String environment;
 }
