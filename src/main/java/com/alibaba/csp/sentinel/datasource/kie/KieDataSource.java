@@ -39,7 +39,7 @@ public class KieDataSource<T> extends AutoRefreshDataSource<String, T> {
     }
 
     private void firstLoad() {
-        log.info("First load config.");
+        log.info(String.format("First load config, ruleKey: %s.", this.ruleKey));
 
         try {
             getProperty().updateValue(loadConfig(this.lastRules));
@@ -50,8 +50,6 @@ public class KieDataSource<T> extends AutoRefreshDataSource<String, T> {
 
     @Override
     public String readSource() {
-        log.info("Start read source.");
-
         if (serviceInfo == null || StringUtils.isEmpty(serviceInfo.getUrl())){
             return lastRules;
         }

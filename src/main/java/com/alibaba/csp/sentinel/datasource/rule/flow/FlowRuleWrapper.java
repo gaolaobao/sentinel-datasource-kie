@@ -1,4 +1,4 @@
-package com.alibaba.csp.sentinel.datasource.rule.flowrule;
+package com.alibaba.csp.sentinel.datasource.rule.flow;
 
 import com.alibaba.csp.sentinel.datasource.AbstractDataSource;
 import com.alibaba.csp.sentinel.datasource.rule.RuleWrapper;

@@ -16,5 +16,29 @@
       "limitApp": "default",
       "strategy": 0
     }
+  ],
+  "com.alibaba.csp.sentinel.slots.block.degrade.DegradeRule" : [
+    {
+      "resource": "abc0",
+      "count": 20.0,
+      "grade": 0,
+      "passCount": 0,
+      "timeWindow": 10
+    },
+    {
+      "resource": "abc1",
+      "count": 15.0,
+      "grade": 0,
+      "passCount": 0,
+      "timeWindow": 10
+    }
+  ],
+  "com.alibaba.csp.sentinel.slots.system.SystemRule" : [
+    {
+      "avgRt": 10,
+      "highestSystemLoad": 5.0,
+      "maxThread": 10,
+      "qps": 20.0
+    }
   ]
 }

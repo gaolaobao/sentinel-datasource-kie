@@ -39,7 +39,6 @@ public class KieClient {
             return Optional.empty();
         }
 
-
         return Optional.ofNullable(kieResponse);
     }
 }
