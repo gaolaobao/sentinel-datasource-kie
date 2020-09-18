@@ -44,7 +44,7 @@ class KieDataSourceTest {
         Assertions.assertEquals(serviceInfo.getService(), "serviceA");
         Assertions.assertEquals(serviceInfo.getVersion(), "1.0.0");
 
-        Assertions.assertEquals(serviceInfo.getUrl(),  "http://192.168.0.1:8080/v1/default/kie/kv");
+        Assertions.assertEquals(serviceInfo.getKieConfigUrl(),  "http://192.168.0.1:8080/v1/default/kie/kv");
     }
 
     /**

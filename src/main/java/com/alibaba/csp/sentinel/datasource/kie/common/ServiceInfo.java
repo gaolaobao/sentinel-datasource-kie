@@ -24,7 +24,7 @@ public class ServiceInfo {
 
     private String environment;
 
-    public String getUrl(){
+    public String getKieConfigUrl(){
         return "http://" + address + "/v1/" + project + "/kie/kv";
     }
 }

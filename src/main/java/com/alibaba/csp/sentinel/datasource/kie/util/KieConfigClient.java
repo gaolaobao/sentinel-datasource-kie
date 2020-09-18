@@ -15,14 +15,13 @@ import java.io.IOException;
 import java.util.Optional;
 
 @Slf4j
-public class KieClient {
+public class KieConfigClient {
     private final static CloseableHttpClient client = HttpClients.createDefault();
 
     public static Optional<KieConfigResponse> getConfig(String url){
         HttpGet httpGet = new HttpGet(url);
         KieConfigResponse kieResponse;
-        try {
-            CloseableHttpResponse response = client.execute(httpGet);
+        try(CloseableHttpResponse response = client.execute(httpGet)) {
 
             int statusCode = response.getStatusLine().getStatusCode();
             if (statusCode != HttpStatus.SC_OK){

@@ -39,7 +39,7 @@ class FlowQpsRunner {
     private static volatile boolean stop = false;
 
     private static final int threadCount = 1;
-    private static int seconds = 60 + 40;
+    private static int seconds = 1000;
 
     public void simulateTraffic() {
         for (int i = 0; i < threadCount; i++) {

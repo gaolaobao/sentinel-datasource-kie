@@ -3,7 +3,7 @@ package com.alibaba.csp.sentinel.datasource.kie;
 import com.alibaba.csp.sentinel.datasource.AutoRefreshDataSource;
 import com.alibaba.csp.sentinel.datasource.Converter;
 import com.alibaba.csp.sentinel.datasource.kie.common.ServiceInfo;
-import com.alibaba.csp.sentinel.datasource.kie.util.KieClient;
+import com.alibaba.csp.sentinel.datasource.kie.util.KieConfigClient;
 import com.alibaba.csp.sentinel.datasource.kie.util.response.KieConfigItem;
 import com.alibaba.csp.sentinel.datasource.kie.util.response.KieConfigLabels;
 import com.alibaba.csp.sentinel.datasource.kie.util.response.KieConfigResponse;
@@ -50,11 +50,11 @@ public class KieDataSource<T> extends AutoRefreshDataSource<String, T> {
 
     @Override
     public String readSource() {
-        if (serviceInfo == null || StringUtils.isEmpty(serviceInfo.getUrl())){
+        if (serviceInfo == null || StringUtils.isEmpty(serviceInfo.getKieConfigUrl())){
             return lastRules;
         }
 
-        Optional<KieConfigResponse> config = KieClient.getConfig(serviceInfo.getUrl());
+        Optional<KieConfigResponse> config = KieConfigClient.getConfig(serviceInfo.getKieConfigUrl());
 
         config.ifPresent(x -> {
             Optional<String> newRule = x.getData().stream()
