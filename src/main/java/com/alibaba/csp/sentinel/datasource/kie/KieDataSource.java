@@ -7,10 +7,13 @@ import com.alibaba.csp.sentinel.datasource.kie.util.KieConfigClient;
 import com.alibaba.csp.sentinel.datasource.kie.util.response.KieConfigItem;
 import com.alibaba.csp.sentinel.datasource.kie.util.response.KieConfigLabels;
 import com.alibaba.csp.sentinel.datasource.kie.util.response.KieConfigResponse;
+import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 public class KieDataSource<T> extends AutoRefreshDataSource<String, T> {
@@ -57,12 +60,12 @@ public class KieDataSource<T> extends AutoRefreshDataSource<String, T> {
         Optional<KieConfigResponse> config = KieConfigClient.getConfig(serviceInfo.getKieConfigUrl());
 
         config.ifPresent(x -> {
-            Optional<String> newRule = x.getData().stream()
+            List<String> strList = x.getData().stream()
                     .filter(this::isTargetItem)
                     .map(KieConfigItem::getValue)
-                    .findFirst();
+                    .collect(Collectors.toList());
 
-            newRule.ifPresent(rule -> lastRules = rule);
+            this.lastRules = JSON.toJSONString(strList);
         });
 
         return lastRules;
