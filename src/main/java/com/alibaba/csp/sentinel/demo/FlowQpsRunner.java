@@ -118,7 +118,7 @@ class FlowQpsRunner {
                     + ", block:" + oneSecondBlock);
 
                 if (seconds-- <= 0) {
-                    stop = true;
+//                    stop = true;
                 }
             }
 

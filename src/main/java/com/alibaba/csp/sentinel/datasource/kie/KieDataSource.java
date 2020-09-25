@@ -8,6 +8,7 @@ import com.alibaba.csp.sentinel.datasource.kie.util.response.KieConfigItem;
 import com.alibaba.csp.sentinel.datasource.kie.util.response.KieConfigLabels;
 import com.alibaba.csp.sentinel.datasource.kie.util.response.KieConfigResponse;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 
@@ -53,16 +54,16 @@ public class KieDataSource<T> extends AutoRefreshDataSource<String, T> {
 
     @Override
     public String readSource() {
-        if (serviceInfo == null || StringUtils.isEmpty(serviceInfo.getKieConfigUrl())){
+        if (serviceInfo == null || StringUtils.isEmpty(serviceInfo.getAddress())){
             return lastRules;
         }
 
         Optional<KieConfigResponse> config = KieConfigClient.getConfig(serviceInfo.getKieConfigUrl());
 
         config.ifPresent(x -> {
-            List<String> strList = x.getData().stream()
+            List<JSONObject> strList = x.getData().stream()
                     .filter(this::isTargetItem)
-                    .map(KieConfigItem::getValue)
+                    .map(item ->JSON.parseObject(item.getValue()))
                     .collect(Collectors.toList());
 
             this.lastRules = JSON.toJSONString(strList);
