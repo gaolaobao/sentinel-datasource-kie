@@ -16,7 +16,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
@@ -69,29 +68,19 @@ public class KieDataSourceWrapper implements DataSourceWrapper {
     }
 
     private void initDataSources(){
-        for(Map.Entry<String, String> entry : rulesMap.entrySet()){
-            String ruleClassPath = entry.getKey();
+        for(String ruleType : ruleCenter.getRuleTypes()){
+            String defaultRule = null;
+            for(Map.Entry<String, String> entry : rulesMap.entrySet()) {
+                if(ruleType.equals(entry.getKey())){
+                    defaultRule = entry.getValue();
+                    break;
+                }
+            }
 
-            int ruleKeyIndex = ruleClassPath.lastIndexOf(".");
-            String ruleKey = ruleClassPath.substring(ruleKeyIndex + 1);
-
-            Optional<KieDataSource<?>> kieDataSource = getKieDataSource(ruleClassPath, ruleKey, entry.getValue());
-
-            kieDataSource.ifPresent(source -> sourceMap.put(ruleKey, source));
+            Class<?> ruleClass = ruleCenter.getRuleClass(ruleType);
+            KieDataSource<?> kieDataSource = getKieDataSource(ruleType, defaultRule, ruleClass);
+            sourceMap.put(ruleType, kieDataSource);
         }
-    }
-
-    private Optional<KieDataSource<?>> getKieDataSource(String rulePath, String ruleKey, String ruleValue){
-        Class<?> ruleClass;
-
-        try {
-            ruleClass = Class.forName(rulePath);
-        }catch (ClassNotFoundException e){
-            log.error(String.format("No found rule: %s", ruleKey), e);
-            return Optional.empty();
-        }
-
-        return Optional.of(getKieDataSource(ruleKey, ruleValue, ruleClass));
     }
 
     private <T> KieDataSource<List<T>> getKieDataSource(String ruleKey, String ruleValue, Class<T> ruleClass){

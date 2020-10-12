@@ -1,5 +1,5 @@
 {
-  "com.alibaba.csp.sentinel.slots.block.flow.FlowRule" : [
+  "FlowRule" : [
     {
       "resource": "abc",
       "controlBehavior": 0,
@@ -17,7 +17,7 @@
       "strategy": 0
     }
   ],
-  "com.alibaba.csp.sentinel.slots.block.degrade.DegradeRule" : [
+  "DegradeRule" : [
     {
       "resource": "abc0",
       "count": 20.0,
@@ -33,7 +33,7 @@
       "timeWindow": 10
     }
   ],
-  "com.alibaba.csp.sentinel.slots.system.SystemRule" : [
+  "SystemRule" : [
     {
       "avgRt": 10,
       "highestSystemLoad": 5.0,

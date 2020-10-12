@@ -18,4 +18,9 @@ public class SystemRuleWrapper extends RuleWrapper {
     public void registerRuleManager(AbstractDataSource<String, ?> dataSource) {
         SystemRuleManager.register2Property((SentinelProperty<List<SystemRule>>) dataSource.getProperty());
     }
+
+    @Override
+    protected Class<?> getRuleClass() {
+        return SystemRule.class;
+    }
 }

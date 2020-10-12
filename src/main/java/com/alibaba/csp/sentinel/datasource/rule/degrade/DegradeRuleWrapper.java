@@ -18,4 +18,9 @@ public class DegradeRuleWrapper extends RuleWrapper {
     public void registerRuleManager(AbstractDataSource<String, ?> dataSource) {
         DegradeRuleManager.register2Property((SentinelProperty<List<DegradeRule>>) dataSource.getProperty());
     }
+
+    @Override
+    protected Class<?> getRuleClass() {
+        return DegradeRule.class;
+    }
 }

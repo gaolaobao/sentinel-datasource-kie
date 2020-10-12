@@ -7,11 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
+import java.util.Set;
 
 @Slf4j
 @Service
+@Getter
 public class RuleCenter {
-    @Getter
     @Autowired
     private Map<String, RuleWrapper> ruleMap;
 
@@ -24,5 +25,14 @@ public class RuleCenter {
         log.info(String.format("Register %s to rule manager.", ruleType));
         RuleWrapper ruleWrapper = ruleMap.get(ruleType);
         ruleWrapper.registerRuleManager(dataSource);
+    }
+
+    public Set<String> getRuleTypes(){
+        return ruleMap.keySet();
+    }
+
+    public Class<?> getRuleClass(String ruleType){
+        RuleWrapper ruleWrapper = ruleMap.get(ruleType);
+        return ruleWrapper.getRuleClass();
     }
 }

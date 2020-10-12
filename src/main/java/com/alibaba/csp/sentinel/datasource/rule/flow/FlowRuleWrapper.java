@@ -18,4 +18,9 @@ public class FlowRuleWrapper extends RuleWrapper {
     public void registerRuleManager(AbstractDataSource<String, ?> dataSource) {
         FlowRuleManager.register2Property((SentinelProperty<List<FlowRule>>) dataSource.getProperty());
     }
+
+    @Override
+    protected Class<?> getRuleClass() {
+        return FlowRule.class;
+    }
 }
