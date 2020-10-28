@@ -17,6 +17,7 @@ package com.alibaba.csp.sentinel.demo;
 
 import com.alibaba.csp.sentinel.Entry;
 import com.alibaba.csp.sentinel.SphU;
+import com.alibaba.csp.sentinel.context.ContextUtil;
 import com.alibaba.csp.sentinel.slots.block.BlockException;
 import com.alibaba.csp.sentinel.util.TimeUtil;
 
@@ -31,7 +32,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 class FlowQpsRunner {
     private static final String KEY = "abc";
-
+    private static final String APP = "appA";
     private static AtomicInteger pass = new AtomicInteger();
     private static AtomicInteger block = new AtomicInteger();
     private static AtomicInteger total = new AtomicInteger();
@@ -60,7 +61,7 @@ class FlowQpsRunner {
         public void run() {
             while (!stop) {
                 Entry entry = null;
-
+                ContextUtil.enter(KEY, APP);
                 try {
                     entry = SphU.entry(KEY);
                     // token acquired, means pass
@@ -74,6 +75,7 @@ class FlowQpsRunner {
                     if (entry != null) {
                         entry.exit();
                     }
+                    ContextUtil.exit();
                 }
 
                 Random random2 = new Random();
