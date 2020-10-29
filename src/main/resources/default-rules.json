@@ -40,5 +40,11 @@
       "maxThread": 10,
       "qps": 20.0
     }
-  ]
+  ],
+  "AuthorityRule" : [
+    {
+      "resource": "abc",
+      "limitApp": "appA",
+      "strategy": 1
+    }]
 }
